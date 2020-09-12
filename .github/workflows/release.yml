@@ -10,7 +10,7 @@ on:
 
 jobs:
   Thunderbird:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         version: ['3.8']
@@ -58,7 +58,7 @@ jobs:
         path: 'thunderbird/dist'
 
   Thunderbird-Beta:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     - name: Patch to include files
       run: |
         cd thunderbird
@@ -89,7 +89,7 @@ jobs:
         path: 'thunderbird/dist'
 
   Thunderbird-Beta:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         version: ['3.8']
@@ -136,7 +136,7 @@ jobs:
         path: 'thunderbird/dist'
 
   Thunderbird-Nightly:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         version: ['3.8']
