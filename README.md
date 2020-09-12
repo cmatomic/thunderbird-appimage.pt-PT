@@ -40,6 +40,6 @@ cd squashfs-root
 ./AppRun
 ```
 
-### Related AppImages 
-* [Firefox AppImage](https://github.com/srevinsaju/Firefox-AppImage)
+### Também disponível  
+* [Firefox AppImage](https://github.com/cmatomic/Firefox-AppImage.pt-PT)
 
