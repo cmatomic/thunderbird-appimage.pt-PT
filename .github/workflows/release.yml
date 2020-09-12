@@ -10,7 +10,7 @@ on:
 
 jobs:
   Thunderbird:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-16.04
     strategy:
       matrix:
         version: ['3.8']
@@ -22,12 +22,43 @@ jobs:
         sudo apt install -y libxml2-utils
         mkdir thunderbird
         cd thunderbird
-        wget https://www.thunderbird.net/en-US/ -O index.html
+        wget https://www.thunderbird.net/pt-PT/ -O index.html
         echo "Downloading"
         wget $(xmllint --html index.html --xpath '/html/body/header/section[2]/div/div/ul/li[4]/a' | grep -E -o 'href="(.*" )' | grep -E -o '"(.*)"' | sed 's/\&amp;/\&/g' | tail -n 1 | sed 's,",,g') -O thunderbird.tar.bz2
         tar -xf thunderbird.tar.bz2
         cd ..
 
+    - name: Patch to include files
+      run: |
+        cd thunderbird
+        cp ../AppRun thunderbird/.
+        chmod +x thunderbird/AppRun
+        cp ../thunderbird.desktop thunderbird/.
+        cp thunderbird/chrome/icons/default/default128.png thunderbird/.
+        mv thunderbird/default128.png thunderbird/thunderbird.png
+        cd ..
+    
+    - name: Patch AppImage
+      run: |
+        cd thunderbird
+        wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x *.AppImage
+        ./appimagetool-x86_64.AppImage thunderbird -n -u 'gh-releases-zsync|cmatomic|thunderbird-appimage.pt-PT|stable|Thunderbird*.AppImage.zsync' Thunderbird-$(cat thunderbird/application.ini | grep -E 'Version' | head -n 1 | grep -E -o '[0-9]+.[0-9]+')_$(cat thunderbird/application.ini | grep -E 'BuildID' | head -n 1 | grep -E -o '[0-9]+').AppImage
+        mkdir dist
+        mv Thunderbird*.AppImage* dist/.
+        cd dist
+        chmod +x *.AppImage
+        cd ..
+       
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: thunderbird-continuous-x86_64.AppImage
+        path: 'thunderbird/dist'
+
+  Thunderbird-Beta:
+    runs-on: ubuntu-16.04
     - name: Patch to include files
       run: |
         cd thunderbird
